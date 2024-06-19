@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Main Start -->
+    <main>
+		<section>
+			<div class="container-fluid h-custom">
+			<h1 class="text-center mb-4 section-heading border-bottom pb-2">Enquiry Form</h1>
+			  <div class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col-md-9 col-lg-6 col-xl-5">
+				  {% load static%}
+				  <img src="{% static 'imgs/enquiry.jpg' %}"
+					class="img-fluid rounded" alt="Sample image">
+				</div>
+				<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+				  
+				  <form method="post" action="{% url 'enquiry' %}">
+					{% csrf_token %}
+					<!-- Email input -->
+					<div class="form-outline mb-2">
+						{{form.full_name.errors}}
+						<label class="form-label" for="form3Example3">Full Name</label>
+						{{form.full_name}}
+					  {% comment %} <input type="email" id="form3Example3" class="form-control form-control-lg"
+						placeholder="Enter a valid email address" /> {% endcomment %}
+					</div>
+		  
+					<!-- Password input -->
+					<div class="form-outline mb-2">
+						<label class="form-label" for="form3Example4">Email</label>
+						{{form.email}}
+					  {% comment %} <input type="password" id="form3Example4" class="form-control form-control-lg"
+						placeholder="Enter password" /> {% endcomment %}
+					</div>
+					<div class="form-outline mb-2">
+						<label class="form-label" for="form3Example5">Detail</label>
+						{{form.detail}}
+					</div>
+					
+		
+					{% if form.non_field_errors %}
+					  <div class="">
+						{% for error in form.non_field_errors %}
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						  {{error}}
+						  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+						{% endfor %}
+					  </div>
+					{% endif %}
+					<div class="text-center text-lg-start pt-2">
+						<button class="btn btn-primary"
+						  style="padding-left: 2.5rem; padding-right: 2.5rem;" type='submit'>Submit</button>
+					  </div>
+		  
+				  </form>
+				</div>
+			  </div>
+			</div>
+		  </section>
+		<!-- End -->
+    </main>
+    <!-- End -->
+{% endblock %}
