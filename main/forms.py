@@ -50,13 +50,11 @@ class SignUp(UserCreationForm):
 
 
 class CustomLoginForm(AuthenticationForm):
-  username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}))
-  password = forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
-  widgets = {
+    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}))
+    password = forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
+    widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'})
         }
-
-  
 
 class ProfileForm(UserChangeForm):
     class Meta:
@@ -86,9 +84,6 @@ class TrainerProfileForm(forms.ModelForm):
             'address': forms.Textarea(attrs={"class":"form-control"}),
             'detail': forms.Textarea(attrs={"class":"form-control"}),
             # 'img': forms.ImageField(attrs={"class":"form-control"}),
-
-
-
             }
         
 class TrainerChangePassword(forms.Form):

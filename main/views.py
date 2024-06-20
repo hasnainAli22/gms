@@ -21,7 +21,7 @@ from . import forms
 def home(request):
     banners = models.Banners.objects.all()
     services = models.Service.objects.all()[:3]
-    gimgs = models.GalleryImage.objects.all().order_by("-id")[:9]
+    gimgs = models.GalleryImage.objects.all().order_by("-id")[:6]
     return render(
         request, "home.html", {"banners": banners, "services": services, "gimgs": gimgs}
     )
@@ -122,7 +122,7 @@ def login_view(request):
 class LoginView(auth_views.LoginView):
     # form_class = forms.CustomLoginForm
     template_name = 'registration/login.html'
-    
+
 # Checkout
 def checkout(request, plan_id):
     planDetail = models.SubPlan.objects.get(pk=plan_id)
@@ -130,7 +130,7 @@ def checkout(request, plan_id):
     already_registered_user = models.Subscription.objects.filter(plan=plan).count()
     # Calculate remaining seats (assuming only one plan per user)
     remaining_seats = plan.max_member - already_registered_user
-    
+
     return render(request, "checkout.html", {"plan": plan, "already_registered": already_registered_user,"remaining_seats": remaining_seats})
 
 
@@ -202,13 +202,13 @@ def user_dashboard(request):
     except models.Subscription.DoesNotExist:
         current_plan = None
         my_trainer = None
-    
+
     if current_plan:
         try:
             my_trainer = models.AssignSubscriber.objects.get(user=request.user)
         except models.AssignSubscriber.DoesNotExist:
             my_trainer = None
-            
+
     enddate = None
     if enddate is not None:
         print("End Date",enddate)

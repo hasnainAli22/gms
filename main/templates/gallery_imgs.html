@@ -1,27 +1,35 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <!-- Main Start -->
-    <main>
-		<!-- Services -->
-		<section class="container my-4">
-			<h1 class="text-center mb-4 section-heading border-bottom pb-2">{{gallery.title}} Images</h1>
-			<div class="row">
-				{% for gimg in gallery_imgs %}
-				<div class="col-md-4 mb-4">
-					<div class="card">
-						<a href="{{gimg.img.url}}" data-lightbox="{{gallery.title}}"><img src="{{gimg.img.url}}" width="155" class="card-img-top" alt="{{gimg.alt_text}}"></a>
-					</div>
-				</div>
-				{% endfor %}
-			</div>
-		</section>
-		<!-- End -->
-    </main>
+  <!-- Main Start -->
+  <main>
+    <!-- Services -->
+    <section class="container my-4">
+      <h1 class="text-center mb-4 section-heading border-bottom pb-2">{{ gallery.title }} Images</h1>
+      <div class="row">
+        {% for gimg in gallery_imgs %}
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <a href="{{ gimg.img.url }}" data-lightbox="{{ gallery.title }}">
+                <img src="{{ gimg.img.url }}"
+                     width="155"
+                     height="100"
+                     class="card-img-top"
+                     alt="{{ gimg.alt_text }}" />
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
     <!-- End -->
-
-<!-- LightBox css -->
-<link rel="stylesheet" type="text/css" href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}" />
-<!-- LightBox Js -->
-<script type="text/javascript" src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"></script>
-{% endblock %}
+  </main>
+  <!-- End -->
+  <!-- LightBox css -->
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}" />
+  <!-- LightBox Js -->
+  <script type="text/javascript"
+          src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"></script>
+{% endblock content %}
