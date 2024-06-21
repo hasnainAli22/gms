@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -8,13 +8,13 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("pagedetail/<int:id>", views.page_detail, name="pagedetail"),
     path("faq", views.faq_list, name="faq"),
-    path("enquiry", views.enquiry, name="enquiry"),
     path("contact", views.contact_page, name="contact_page"),
     path("gallery", views.gallery, name="gallery"),
     path("gallerydetail/<int:id>", views.gallery_detail, name="gallery_detail"),
     path("pricing", views.pricing, name="pricing"),
     path("accounts/signup", views.signup, name="signup"),
-    path('accounts/password-change', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html'), name='auth_password_change'),
+    path('accounts/password-change', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html', success_url =reverse_lazy("auth_password_done")), name='auth_password_change'),
+    path('accounts/password-change/done', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='auth_password_done'),
     path("checkout/<int:plan_id>", views.checkout, name="checkout"),
     path(
         "checkout_session/<int:plan_id>",
@@ -28,7 +28,7 @@ urlpatterns = [
     path("update_profile", views.update_profile, name="update_profile"),
     # Login
     path("accounts/login", views.login_view, name='login'),
-    
+
     # Trainer Login
     path("trainerlogin", views.trainerlogin, name="trainerlogin"),
     path("trainerlogout", views.trainerlogout, name="trainerlogout"),

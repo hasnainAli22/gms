@@ -7,6 +7,41 @@
       <h1 class="text-center mb-4 section-heading border-bottom pb-2">Contact Us</h1>
       <div class="row">
         <div class="col-md-6">
+          <!--Form Here-->
+          <form method="post" action="{% url 'contact_page' %}">
+            {% csrf_token %}
+            <!-- Email input -->
+            <div class="form-outline mb-2">
+              {{ form.full_name.errors }}
+              <label class="form-label" for="form3Example3">Full Name</label>
+              {{ form.full_name }}
+            </div>
+            <!-- Password input -->
+            <div class="form-outline mb-2">
+              <label class="form-label" for="form3Example4">Email</label>
+              {{ form.email }}
+            </div>
+            <div class="form-outline mb-2">
+              <label class="form-label" for="form3Example5">Detail</label>
+              {{ form.detail }}
+            </div>
+            {% if form.non_field_errors %}
+              <div>
+                {% for error in form.non_field_errors %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ error }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <div class="text-center text-lg-start pt-2">
+              <button class="btn btn-primary w-100" type="submit">Submit</button>
+            </div>
+          </form>
           <table class="table table-bordered">
             <tr>
               <th>Address</th>
@@ -18,10 +53,6 @@
             <tr>
               <th>Mobile</th>
               <td>+1 123456799</td>
-            </tr>
-            <tr>
-              <th>Telephone</th>
-              <td>123 7894562</td>
             </tr>
             <tr>
               <th>Email</th>

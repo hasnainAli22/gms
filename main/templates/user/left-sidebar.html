@@ -1,9 +1,13 @@
 <div class="list-group">
-	<a href="{% url 'user_dashboard' %}" class="list-group-item {% if request.path == '/user_dashboard' %} active {% endif %}">Dashboard</a>
-	<a href="{% url 'update_profile' %}" class="list-group-item {% if request.path == '/update_profile' %} active {% endif %}">Profile</a>
-	<a href="{% url 'auth_password_change' %}" class="list-group-item {% if request.path == '/accounts/password-change' %} active {% endif %}">Change Passwords</a>
-	<a href="{% url 'notifs' %}" class="list-group-item {% if request.path == '/notifs' %} active {% endif %}">Notifications <span class="float-end badge bg-info mt-1">{{total_unread}}</span></a>
-	{% comment %} 
+   <a href="{% url 'user_dashboard' %}"
+      class="list-group-item {% if request.path == '/user_dashboard' %}active{% endif %}">Dashboard</a>
+   <a href="{% url 'update_profile' %}"
+      class="list-group-item {% if request.path == '/update_profile' %}active{% endif %}">Profile</a>
+   <a href="{% url 'auth_password_change' %}"
+      class="list-group-item {% if request.path == '/accounts/password-change' %}active{% endif %}">Change Passwords</a>
+   {% comment %}
+    <a href="{% url 'notifs' %}" class="list-group-item {% if request.path == '/notifs' %}active{% endif %}">Notifications <span class="float-end badge bg-info mt-1">{{ total_unread }}</span></a>
 	<a href="#" class="list-group-item">Messages</a>
-	<a href="{% url 'report_for_trainer' %}" class="list-group-item {% if request.path == '/report_for_trainer' %} active {% endif %}">Report for Trainer</a> {% endcomment %}
+   <a href="{% url 'report_for_trainer' %}"
+      class="list-group-item {% if request.path == '/report_for_trainer' %} active {% endif %}">Report for Trainer</a> {% endcomment %}
 </div>

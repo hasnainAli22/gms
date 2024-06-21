@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     "main",
     "mathfilters"
-    
+
 ]
 
 MIDDLEWARE = [
@@ -166,5 +166,15 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
+}
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
 }
 

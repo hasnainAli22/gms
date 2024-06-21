@@ -3,7 +3,7 @@ from django.template.loader import get_template
 from django.db.models import Count
 from django.core.paginator import Paginator
 from django.core import serializers
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
@@ -39,11 +39,6 @@ def faq_list(request):
 
 # Contact
 def contact_page(request):
-    return render(request, "contact_us.html")
-
-
-# Enquiry
-def enquiry(request):
     msg = ""
     if request.method == "POST":
         form = forms.EnquiryForm(request.POST)
@@ -51,8 +46,7 @@ def enquiry(request):
             form.save()
             msg = "Data has been saved"
     form = forms.EnquiryForm
-    return render(request, "enquiry.html", {"form": form, "msg": msg})
-
+    return render(request, "contact_us.html", {"form": form, "msg": msg})
 
 # Show galleries
 def gallery(request):
@@ -84,7 +78,9 @@ def pricing(request):
 
 # SignUp
 def signup(request):
-    error_message = None
+    if request.user.is_authenticated:
+        return redirect('home')  # Redirect authenticated users
+
     if request.method == "POST":
         form = forms.SignUp(request.POST)
         if form.is_valid():
@@ -93,12 +89,11 @@ def signup(request):
             messages.success(
                 request, "Thank you for registering. You are now logged in."
             )
-            # return redirect() # TODO
-            msg = "Thank you for register."
+            return redirect('home')
+    else:
+        form = forms.SignUp()
 
-    form = forms.SignUp
-    return render(request, "registration/signup.html", {"form": form, "msg": error_message})
-
+    return render(request, "registration/signup.html", {"form": form})
 
 def login_view(request):
   error_message = None

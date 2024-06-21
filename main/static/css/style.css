@@ -14,6 +14,10 @@
   width: 22%;
 }
 
+.sign-up-margin {
+  margin-bottom: 10rem;
+}
+
 @media (max-width: 768px) {
   .responsive-img {
     width: 220px; /* Size when viewport is smaller */
