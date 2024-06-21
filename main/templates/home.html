@@ -1,131 +1,113 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<!-- Main Start -->
-<main>
-  <!-- banner Start -->
-  <div
-    id="carouselExampleControls"
-    class="carousel slide"
-    data-bs-ride="carousel"
-  >
-    <div class="carousel-inner">
-      {% for banner in banners %}
-      <div
-        class="carousel-item {% if forloop.counter == 1 %} active {% endif %}"
-      >
-        <img src="{{banner.img.url}}" class="d-block w-100" alt="Slide 1" />
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <!-- Main Start -->
+  <main>
+    <!-- banner Start -->
+    <div id="carouselExampleControls"
+         class="carousel slide"
+         data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for banner in banners %}
+          <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+            <img src="{{ banner.img.url }}"
+                 class="d-block w-100"
+                 height="auto"
+                 width="auto"
+                 alt="Slide 1" />
+          </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <button class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselExampleControls"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselExampleControls"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-  <!-- End Banner -->
-  <!-- Services -->
-  <section class="container my-4">
-    <h1 class="text-center mb-4 section-heading">Services</h1>
-    <div class="row">
-      {% for service in services %}
-      <div class="col-md-4 mb-3 d-flex align-items-stretch">
-        <div class="card">
-          <img
-            src="{{service.img.url}}"
-            class="card-img-top"
-            width="350px"
-            height="350px"
-            alt="{{service.title}}"
-          />
-          <div class="card-body d-flex flex-column">
-            <h3 class="card-title">{{service.title}}</h3>
-            <p class="card-text">{{service.detail}}</p>
-            <a href="#" class="btn btn-primary mt-auto">Read More</a>
+    <!-- End Banner -->
+    <!-- Services -->
+    <section class="container my-4">
+      <h1 class="text-center mb-4 section-heading">Services</h1>
+      <div class="row">
+        {% for service in services %}
+          <div class="col-md-4 mb-3 d-flex align-items-stretch">
+            <div class="card">
+              <img src="{{ service.img.url }}"
+                   class="card-img-top"
+                   width="auto"
+                   height="auto"
+                   alt="{{ service.title }}" />
+              <div class="card-body d-flex flex-column">
+                <h3 class="card-title">{{ service.title }}</h3>
+                <p class="card-text">{{ service.detail }}</p>
+                <a href="#" class="btn btn-primary mt-auto">Read More</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    <!-- End -->
+    <!-- Testimonials -->
+    <section class="container-fluid bg-light py-4 mt-5 border-top border-bottom">
+      <div class="container">
+        <div class="row d-flex align-items-stretch justify-content-between">
+          <div class="col-md-5 d-flex flex-column">
+            <h1 class="mb-4 section-heading">About Us</h1>
+            <p class="lh-base">
+              Mughal Gym isn't just a gym; it's a community dedicated to
+              empowering individuals to achieve their fitness goals in a
+              supportive and inspiring environment. We believe in the
+              transformation power of exercise and its ability to not only sculpt
+              your physique but also boost your confidence and overall well-being.
+              Our Story Was Mughal Gym founded by a fitness enthusiast with a
+              dream of creating an inclusive space for all? Did it start as a
+              small training studio that grew based on its reputation for
+              personalized attention and results? Perhaps it stemmed from a desire
+              to bridge a gap in the fitness industry, offering unique programs or
+              catering to a specific clientele.
+            </p>
+            <p class="mt-auto">
+              <a href="{% url 'pagedetail' 1 %}" class="btn btn-info text-white w-100">Read More</a>
+            </p>
+          </div>
+          <div class="col-md-5 d-flex flex-column">
+            <h1 class="mb-4 section-heading">Gallery</h1>
+            <div class="gallery">
+              {% for gimg in gimgs %}
+                <a href="{{ gimg.img.url }}" data-lightbox="gallery">
+                  <img src="{{ gimg.img.url }}"
+                       width="147px"
+                       height="auto"
+                       class="img-thumbnail responsive-img"
+                       alt="{{ gimg.alt_text }}" />
+                </a>
+              {% endfor %}
+            </div>
+            <p class="mt-auto">
+              <a href="{% url 'gallery' %}" class="btn btn-info mt-2 text-white w-100">View All</a>
+            </p>
           </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
-  </section>
+    </section>
+    <!-- End Testimonials -->
+  </main>
   <!-- End -->
-
-  <!-- Testimonials -->
-  <section class="container-fluid bg-light py-4 mt-5 border-top border-bottom">
-    <div class="container">
-      <div class="row d-flex align-items-stretch justify-content-between">
-        <div class="col-md-5 d-flex flex-column">
-          <h1 class="mb-4 section-heading">About Us</h1>
-          <p class="lh-base">
-            Mughal Gym isn't just a gym; it's a community dedicated to
-            empowering individuals to achieve their fitness goals in a
-            supportive and inspiring environment. We believe in the
-            transformation power of exercise and its ability to not only sculpt
-            your physique but also boost your confidence and overall well-being.
-            Our Story Was Mughal Gym founded by a fitness enthusiast with a
-            dream of creating an inclusive space for all? Did it start as a
-            small training studio that grew based on its reputation for
-            personalized attention and results? Perhaps it stemmed from a desire
-            to bridge a gap in the fitness industry, offering unique programs or
-            catering to a specific clientele.
-          </p>
-          <p class="mt-auto">
-            <a
-              href="{% url 'pagedetail' 1 %}"
-              class="btn btn-info text-white w-100"
-              >Read More</a
-            >
-          </p>
-        </div>
-        <div class="col-md-5 d-flex flex-column">
-          <h1 class="mb-4 section-heading">Gallery</h1>
-          <div class="gallery">
-            {% for gimg in gimgs %}
-            <a href="{{gimg.img.url}}" data-lightbox="gallery"
-              ><img
-                src="{{gimg.img.url}}"
-                width="147"
-                height="100"
-                class="img-thumbnail"
-                alt="{{gimg.alt_text}}"
-            /></a>
-            {% endfor %}
-          </div>
-          <p class="mt-auto">
-            <a href="{% url 'gallery' %}" class="btn btn-info text-white w-100"
-              >View All</a
-            >
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- End Testimonials -->
-</main>
-<!-- End -->
-
-<!-- LightBox css -->
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}"
-/>
-<!-- LightBox Js -->
-<script
-  type="text/javascript"
-  src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"
-></script>
-
-{% endblock %}
+  <!-- LightBox css -->
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'lightbox2-2.11.3/dist/css/lightbox.min.css' %}" />
+  <!-- LightBox Js -->
+  <script type="text/javascript"
+          src="{% static 'lightbox2-2.11.3/dist/js/lightbox.min.js' %}"></script>
+{% endblock content %}

@@ -8,6 +8,7 @@
     <meta name="description" content="A local gym management system" />
     <!-- Bootstrap CSS -->
     <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     <!-- Bootstrap Icons -->
     <link href="{% static 'bootstrap-icons/font/bootstrap-icons.css' %}"
           rel="stylesheet" />
@@ -17,7 +18,7 @@
   </head>
   <body>
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
       <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">
           {% load static %}
@@ -124,13 +125,13 @@
       <p class="float-end mb-5">
         <a class="btn btn-outline-success text-black" href="#">Back to top</a>
       </p>
-      <p>© 2024 MUGHAL FITNESS LEVELS GYM®</p>
       <p>
         <a class="btn btn-outline-secondary" href="{% url 'pagedetail' 2 %}">Privacy</a>
         <a class="btn btn-outline-secondary" href="{% url 'pagedetail' 3 %}">Terms</a>
         <a class="btn btn-outline-secondary" href="{% url 'faq' %}">FAQ</a>
         <a class="btn btn-outline-secondary" href="{% url 'contact_page' %}">Contact Us</a>
       </p>
+      <p class="text-align-center">© 2024 Copyright: MUGHAL FITNESS LEVELS GYM®</p>
     </footer>
     <!-- Bootstrap Bundle -->
     <script src="{% static 'bootstrap.bundle.min.js' %}"></script>

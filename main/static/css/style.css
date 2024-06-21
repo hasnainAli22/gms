@@ -1,0 +1,13 @@
+.responsive-img {
+  width: 147px; /* Default size */
+}
+
+.plan-min-width {
+  min-width: 20rem;
+}
+
+@media (max-width: 768px) {
+  .responsive-img {
+    width: 220px; /* Size when viewport is smaller */
+  }
+}
