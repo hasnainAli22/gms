@@ -38,7 +38,7 @@ class SignUp(UserCreationForm):
             "email": forms.EmailInput(attrs={"class":"form-control"}),
         }
         help_texts = {
-            "username": "Username",
+            "username": None,
             "password1": None,
             "password2": None,
         }
@@ -69,9 +69,8 @@ class SignUp(UserCreationForm):
 
         return cleaned_data
 
-
 class CustomLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}))
+    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     password = forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
     widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'})

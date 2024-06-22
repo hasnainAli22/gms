@@ -18,8 +18,50 @@
   margin-bottom: 10rem;
 }
 
+.close {
+  opacity: 0.7;
+  transition: opacity 0.15s linear;
+}
+
+/* Style the close button on hover */
+.close:hover {
+  opacity: 1;
+}
+
+.heading-shadow {
+  margin-top: 1.5rem;
+  text-shadow: 1px 1px 4px #333333;
+  color: white;
+}
+
+#hero {
+  background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url('../imgs/gym-back.jpg');
+  background-size: cover;
+  background-position: 75%;
+  color: white;
+  min-height: 200px;
+  text-align: center;
+}
+
+#hero p {
+  font-size: 2rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px #333333;
+}
+
 @media (max-width: 768px) {
   .responsive-img {
     width: 220px; /* Size when viewport is smaller */
+  }
+  .sign-up-margin {
+    margin-bottom: 0rem;
+  }
+  section {
+    flex-direction: column;
   }
 }

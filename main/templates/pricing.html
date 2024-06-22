@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load check_package %}
-<!--filter low-->
 {% load mathfilters %}
 {% block content %}
   <link rel="stylesheet"
@@ -95,4 +94,11 @@
       </div>
     </section>
   </main>
+  <script>
+    {% comment %} function showLoginMessage() {
+        alert('Please login to get started.');
+        return false; // Prevent the link from being followed
+    }
+</script>
+  {% endcomment %}
 {% endblock content %}

@@ -27,7 +27,7 @@ urlpatterns = [
     path("user_dashboard", views.user_dashboard, name="user_dashboard"),
     path("update_profile", views.update_profile, name="update_profile"),
     # Login
-    path("accounts/login", views.login_view, name='login'),
+    path("accounts/login/", views.login_view, name='login'),
 
     # Trainer Login
     path("trainerlogin", views.trainerlogin, name="trainerlogin"),

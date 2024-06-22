@@ -12,13 +12,12 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import stripe
+import logging
 from datetime import timedelta
 from . import models
 from . import forms
 
 # Create your views here.
-
-
 # Home Page
 def home(request):
     banners = models.Banners.objects.all()
@@ -64,7 +63,6 @@ def gallery_detail(request, id):
         request, "gallery_imgs.html", {"gallery_imgs": gallery_imgs, "gallery": gallery}
     )
 
-
 # Subscription Plans
 def pricing(request):
     pricing = (
@@ -76,7 +74,6 @@ def pricing(request):
     print(pricing)
     dfeatures = models.SubPlanFeature.objects.all()
     return render(request, "pricing.html", {"plans": pricing, "dfeatures": dfeatures})
-
 
 # SignUp
 def signup(request):
@@ -97,37 +94,34 @@ def signup(request):
 
     return render(request, "registration/signup.html", {"form": form})
 
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from . import forms
+
 def login_view(request):
-  error_message = None
-  if request.method == 'POST':
-    form = forms.CustomLoginForm(request, data=request.POST)
-    if form.is_valid():
-      username = form.cleaned_data['username']
-      password = form.cleaned_data['password']
-      user = authenticate(request, username=username, password=password)
-      if user is not None:
-        login(request, user)
-        return redirect('home')  # Replace 'home' with your desired redirect URL
-      else:
-        error_message = 'Invalid username or password'
+    if request.method == 'POST':
+        form = forms.CustomLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                messages.success(request, "Login Success")
+                login(request, user)
+                return redirect('user_dashboard')
+            else:
+                messages.error(request, "Invalid username or password")
+        else:
+            messages.error(request, "Invalid username or password")
     else:
-      # Handle potential form validation errors (optional)
-      pass
-  else:
-    form = forms.CustomLoginForm()
-  return render(request, 'registration/login.html', context={'form': form, 'msg': error_message})
-class LoginView(auth_views.LoginView):
-    # form_class = forms.CustomLoginForm
-    template_name = 'registration/login.html'
+        form = forms.CustomLoginForm()
+    return render(request, 'registration/login.html', context={'form': form})
+
 
 # Checkout
 @login_required
 def checkout(request, plan_id):
-    # planDetail = models.SubPlan.objects.get(pk=plan_id)
-    # plan = get_object_or_404(models.SubPlan, pk=plan_id)
-    # already_registered_user = models.Subscription.objects.filter(plan=plan).count()
-    # # Calculate remaining seats (assuming only one plan per user)
-    # remaining_seats = plan.max_member - already_registered_user
     plan = models.SubPlan.objects.get(id=plan_id)
     current_subscription = models.Subscription.objects.filter(user=request.user, is_active=True).first()
 
