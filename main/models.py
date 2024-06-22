@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.auth.models import User
-
+from datetime import timedelta
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
@@ -151,6 +152,27 @@ class Subscription(models.Model):
 	plan=models.ForeignKey(SubPlan, on_delete=models.CASCADE,null=True)
 	price=models.CharField(max_length=50)
 	reg_date=models.DateField(auto_now_add=True,null=True)
+	end_date = models.DateField(null=True, blank=True)
+	is_active = models.BooleanField(default=True)
+	
+	def save(self, *args, **kwargs):
+		# if not self.end_date:
+		# 	self.end_date = self.reg_date + timedelta(days=self.plan.validity_days)
+        # Deactivate other active subscriptions for the user
+		if self.is_active:
+			Subscription.objects.filter(user=self.user, is_active=True).update(is_active=False)
+		super().save(*args, **kwargs)
+
+	@property
+	def end_date(self):
+		return self.reg_date + timedelta(days=self.plan.validity_days)
+
+	@property
+	def is_expired(self):
+		return timezone.now().date() > self.end_date
+	
+	def __str__(self):
+		return f"{self.user.username} - {self.plan.title}"
  
 # Trainer
 class Trainer(models.Model):

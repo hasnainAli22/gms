@@ -14,7 +14,7 @@ urlpatterns = [
     path("pricing", views.pricing, name="pricing"),
     path("accounts/signup", views.signup, name="signup"),
     path('accounts/password-change', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html', success_url =reverse_lazy("auth_password_done")), name='auth_password_change'),
-    path('accounts/password-change/done', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='auth_password_done'),
+    path('accounts/password-change/done', auth_views.PasswordChangeDoneView.as_view(template_name='registration/change_done.html'), name='auth_password_done'),
     path("checkout/<int:plan_id>", views.checkout, name="checkout"),
     path(
         "checkout_session/<int:plan_id>",

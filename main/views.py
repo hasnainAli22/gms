@@ -9,6 +9,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import stripe
 from datetime import timedelta
 from . import models
@@ -119,13 +121,28 @@ class LoginView(auth_views.LoginView):
     template_name = 'registration/login.html'
 
 # Checkout
+@login_required
 def checkout(request, plan_id):
-    planDetail = models.SubPlan.objects.get(pk=plan_id)
-    plan = get_object_or_404(models.SubPlan, pk=plan_id)
-    already_registered_user = models.Subscription.objects.filter(plan=plan).count()
-    # Calculate remaining seats (assuming only one plan per user)
-    remaining_seats = plan.max_member - already_registered_user
+    # planDetail = models.SubPlan.objects.get(pk=plan_id)
+    # plan = get_object_or_404(models.SubPlan, pk=plan_id)
+    # already_registered_user = models.Subscription.objects.filter(plan=plan).count()
+    # # Calculate remaining seats (assuming only one plan per user)
+    # remaining_seats = plan.max_member - already_registered_user
+    plan = models.SubPlan.objects.get(id=plan_id)
+    current_subscription = models.Subscription.objects.filter(user=request.user, is_active=True).first()
 
+    if current_subscription:
+        messages.error(request, "You already have an active subscription.")
+        return redirect('user_dashboard')
+
+    if request.method == 'POST':
+        subscription = models.Subscription(user=request.user, plan=plan, price=plan.price)
+        subscription.save()
+        messages.success(request, f"You have successfully subscribed to {plan.title} plan.")
+        return redirect('user_dashboard')
+    
+    already_registered_user = models.Subscription.objects.filter(plan=plan).count()
+    remaining_seats = plan.max_member - already_registered_user
     return render(request, "checkout.html", {"plan": plan, "already_registered": already_registered_user,"remaining_seats": remaining_seats})
 
 
@@ -138,10 +155,8 @@ def checkout_session(request, plan_id,):
     print("Discounted Amount",discount_amount)
 
     # Calculate line_item total considering discount
-    print("PRice of the plan", plan.price)
     line_item_total = max(plan.price * 100 - int(discount_amount * 100), 0)  # Ensure non-negative
     line_item_total = max(plan.price * 100 - int(discount_amount * 100), 0)
-    print("Discounted price", line_item_total)
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -188,28 +203,29 @@ def pay_success(request):
 def pay_cancel(request):
     return render(request, "cancel.html")
 
-
-# User Dashboard Section start
 # User Dashboard Section Start
+@login_required
 def user_dashboard(request):
     try:
-        current_plan = models.Subscription.objects.get(user=request.user)
+        current_plan = models.Subscription.objects.get(user=request.user, is_active=True)
     except models.Subscription.DoesNotExist:
         current_plan = None
         my_trainer = None
 
     if current_plan:
-        try:
-            my_trainer = models.AssignSubscriber.objects.get(user=request.user)
-        except models.AssignSubscriber.DoesNotExist:
-            my_trainer = None
+        if current_plan.is_expired:
+            current_plan.is_active = False
+            current_plan.save()
+            current_plan = None
+        else:
+            try:
+                my_trainer = models.AssignSubscriber.objects.get(user=request.user)
+            except models.AssignSubscriber.DoesNotExist:
+                my_trainer = None
 
     enddate = None
-    if enddate is not None:
-        print("End Date",enddate)
-        enddate = current_plan.reg_date + timedelta(
-            days=current_plan.plan.validity_days
-        )
+    if current_plan and current_plan.reg_date:
+        enddate = current_plan.end_date
 
     # Notification
     data = models.Notify.objects.all().order_by("-id")

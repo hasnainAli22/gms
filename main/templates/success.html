@@ -1,11 +1,16 @@
-{% extends 'base.html' %} {% block content %}
-<!-- Main Start -->
-<main>
-  <!-- Services -->
-  <section class="container my-4">
-    <h3>Thanks for Payment</h3>
-  </section>
+{% extends "base.html" %}
+{% block content %}
+  <!-- Main Start -->
+  <main>
+    <!-- Services -->
+    <section class="container my-4">
+      <h3>
+        Payment Done <span class="bi-check-circle" />
+      </h3>
+      <h3>Thankyou!</h3>
+      <a class="btn btn-primary" href="{% url 'user_dashboard' %}">Go Back</a>
+    </section>
+    <!-- End -->
+  </main>
   <!-- End -->
-</main>
-<!-- End -->
-{% endblock %}
+{% endblock content %}

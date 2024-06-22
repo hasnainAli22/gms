@@ -18,7 +18,14 @@
                                         <li class="list-group-item">Price: {{ current_plan.price }}</li>
                                         <li class="list-group-item">Validity: {{ current_plan.plan.validity_days }} Days</li>
                                         <li class="list-group-item">Purchase Date: {{ current_plan.reg_date }}</li>
-                                        <li class="list-group-item">Expiry Date: {{ enddate }}</li>
+                                        <li class="list-group-item">
+                                            Expiry Date:
+                                            {% if current_subscription.is_expired %}
+                                                Your subscription has expired.
+                                            {% else %}
+                                                {{ enddate }}
+                                            {% endif %}
+                                        </li>
                                     </ul>
                                 </div>
                             {% else %}

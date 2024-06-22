@@ -75,7 +75,7 @@
                   {% if request.user.is_authenticated %}
                   Hi, {{ request.user.first_name }}</a>
                 {% else %}
-                Login</a>
+                Account</a>
               {% endif %}
               <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                 {% if not request.user.is_authenticated %}
@@ -125,10 +125,11 @@
   </nav>
   <!-- Header End -->
   <!-- Messages Section -->
-  {% comment %} {% if messages %}
-      <div class="container mt-3">
-        {% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}
-  </div> {% endcomment %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}
+    </div>
+  {% endif %}
   <!--end messages-->
   {% block content %}
   {% endblock content %}
