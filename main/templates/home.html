@@ -23,27 +23,13 @@
       </button>
     </div> {% endcomment %}
     <!--home top-->
-    {% if request.user.is_authenticated %}
-      {% check_user_package_h request.user.id as check_pckg %}
-      {% if check_pckg %}
-      {% else %}
-        <section class="container my-2">
-          <article id="hero" class="rounded">
-            <h1 class="heading_shadow pt-3">EID AFTER EID</h1>
-            <p class="home-p">All packages at discounted price</p>
-            <a class="btn btn-primary mt-3 px-4" href="{% url 'pricing' %}">Purchase</a>
-          </article>
-        </section>
-      {% endif %}
-    {% else %}
-      <section class="container my-2">
-        <article id="hero" class="rounded">
-          <h1 class="heading_shadow pt-3">EID AFTER EID</h1>
-          <p class="home-p">All packages at discounted price</p>
-          <a class="btn btn-primary mt-3 px-4" href="{% url 'pricing' %}">Purchase</a>
-        </article>
-      </section>
-    {% endif %}
+    <section class="container my-2">
+      <article id="hero" class="rounded">
+        <h1 class="heading_shadow pt-3">EID AFTER EID</h1>
+        <p class="home-p">All packages at discounted price</p>
+        <a class="btn btn-primary mt-3 px-4" href="{% url 'pricing' %}">Purchase</a>
+      </article>
+    </section>
     <!-- End Banner -->
     <!-- Services -->
     <section class="container my-4">
@@ -60,7 +46,7 @@
               <div class="card-body d-flex flex-column">
                 <h3 class="card-title">{{ service.title }}</h3>
                 <p class="card-text">{{ service.detail }}</p>
-                <a href="#" class="btn btn-primary mt-auto">Read More</a>
+                <a href="{% url 'services' %}" class="btn btn-primary mt-auto">View All</a>
               </div>
             </div>
           </div>

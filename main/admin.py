@@ -21,13 +21,32 @@ class EnquiryAdmin(admin.ModelAdmin):
 	list_display=('full_name','email','detail','send_time')
 admin.site.register(models.Enquiry,EnquiryAdmin)
 
-class GalleryAdmin(admin.ModelAdmin):
-	list_display=('title','image_tag')
-admin.site.register(models.Gallery,GalleryAdmin)
+from django.contrib import admin
+from django.forms import inlineformset_factory
+from django.utils.safestring import mark_safe
 
+from .models import Gallery, GalleryImage
+
+class GalleryImageInline(admin.TabularInline):
+    model = GalleryImage
+    extra = 3  # Number of extra inline forms
+
+    readonly_fields = ('image_tag',)
+
+    def image_tag(self, obj):
+        return mark_safe(f"<img src='{obj.img.url}' width='80' />")
+
+@admin.register(Gallery)
+class GalleryAdmin(admin.ModelAdmin):
+    inlines = [GalleryImageInline]
+    list_display = ('id', 'title', 'image_tag')
+
+@admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
-	list_display=('alt_text','image_tag')
-admin.site.register(models.GalleryImage,GalleryImageAdmin)
+    list_display = ('alt_text', 'image_tag')
+
+# admin.site.register(GalleryImage, GalleryImageAdmin)
+
 
 class SubPlanAdmin(admin.ModelAdmin):
 	list_editable=('highlight_status','max_member')

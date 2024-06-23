@@ -55,7 +55,6 @@ def gallery(request):
     galleries = models.Gallery.objects.all().order_by("-id")
     return render(request, "gallery.html", {"galleries": galleries})
 
-
 # Show gallery photos
 def gallery_detail(request, id):
     gallery = models.Gallery.objects.get(id=id)
@@ -77,7 +76,6 @@ def pricing(request):
     return render(request, "pricing.html", {"plans": pricing, "dfeatures": dfeatures})
 
 # SignUp
-
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')  # Redirect authenticated users
@@ -95,7 +93,6 @@ def signup(request):
         form = forms.SignUp()
 
     return render(request, "registration/signup.html", {"form": form})
-
 
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -121,7 +118,6 @@ def login_view(request):
         form = forms.CustomLoginForm()
     return render(request, 'registration/login.html', context={'form': form})
 
-
 # Checkout
 @login_required
 def checkout(request, plan_id):
@@ -142,9 +138,7 @@ def checkout(request, plan_id):
     remaining_seats = plan.max_member - already_registered_user # type: ignore
     return render(request, "checkout.html", {"plan": plan, "already_registered": already_registered_user,"remaining_seats": remaining_seats})
 
-
 stripe.api_key = "sk_test_51LMWjAIDIO1D6jfm6Uvwv86ccB8aC7YIRjseqHaBSmPbh1pZI4o5Shf4fopHzrKIqxlGvw2yhmmqIcqmo1tdRD9700bcQ3bUYw"
-
 
 def checkout_session(request, plan_id,):
     plan = models.SubPlan.objects.get(pk=plan_id)
@@ -175,7 +169,6 @@ def checkout_session(request, plan_id,):
     )
     return redirect(session.url, code=303)
 
-
 from django.core.mail import EmailMessage
 
 def pay_success(request):
@@ -193,7 +186,6 @@ def pay_success(request):
     msg.send()
 
     return render(request, "success.html")
-
 
 # Cancel
 def pay_cancel(request):
@@ -484,3 +476,7 @@ def equipment_list(request):
   page_obj = paginator.get_page(page_number)
   context = {'equipments': page_obj}
   return render(request, 'equipment_list.html', context)
+
+def all_services(request):
+    services = models.Service.objects.all()
+    return render(request, 'all_services.html', {'services':services})

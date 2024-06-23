@@ -77,7 +77,7 @@ class SignUp(UserCreationForm):
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
         # Basic phone number validation using regex
-        if not re.match(r'^\+?1?\d{11,13}$', phone_number):
+        if not re.match(r'^\+?1?\d{11,13}$',str(phone_number or '')):
             raise forms.ValidationError("Enter a valid phone number.")
         return phone_number
 
@@ -165,11 +165,6 @@ class TrainerProfileForm(forms.ModelForm):
 
 class TrainerChangePassword(forms.Form):
     new_password=forms.CharField(max_length=50,required=True,widget=forms.PasswordInput(attrs={"class": "form-control"}))
-
-class ReportForTrainerForm(forms.ModelForm):
-	class Meta:
-		model=models.TrainerSubscriberReport
-		fields=('report_for_trainer','report_msg')
 
 class ReportForUserForm(forms.ModelForm):
 	class Meta:
