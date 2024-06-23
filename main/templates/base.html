@@ -74,6 +74,8 @@
                    aria-expanded="false">
                   {% if request.user.is_authenticated %}
                     Hi, {{ request.user.username }}
+                  {% elif request.session.trainerLogin %}
+                    Hi, {{ request.session.name }}
                   {% else %}
                     Account
                   {% endif %}

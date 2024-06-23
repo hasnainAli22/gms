@@ -7,11 +7,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-
 import json
 
 # Create your models here.
-
 # Banners
 class Banners(models.Model):
 	img=models.ImageField(upload_to="banners/")
@@ -339,9 +337,11 @@ class EquipmentInventory(models.Model):
   def __str__(self):
     return self.name
 
+#phone numbers
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
 
-#   def get_status(self):
-#     if self.available:
-#       return "Available"
-#     else:
-#       return "Unavailable"
+    def __str__(self):
+        return self.user.username
+

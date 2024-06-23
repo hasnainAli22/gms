@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
 from django.db.models import Count
@@ -76,6 +77,7 @@ def pricing(request):
     return render(request, "pricing.html", {"plans": pricing, "dfeatures": dfeatures})
 
 # SignUp
+
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')  # Redirect authenticated users
@@ -93,6 +95,7 @@ def signup(request):
         form = forms.SignUp()
 
     return render(request, "registration/signup.html", {"form": form})
+
 
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -136,7 +139,7 @@ def checkout(request, plan_id):
         return redirect('user_dashboard')
     
     already_registered_user = models.Subscription.objects.filter(plan=plan).count()
-    remaining_seats = plan.max_member - already_registered_user
+    remaining_seats = plan.max_member - already_registered_user # type: ignore
     return render(request, "checkout.html", {"plan": plan, "already_registered": already_registered_user,"remaining_seats": remaining_seats})
 
 
@@ -175,7 +178,6 @@ def checkout_session(request, plan_id,):
 
 from django.core.mail import EmailMessage
 
-
 def pay_success(request):
     session = stripe.checkout.Session.retrieve(request.GET["session_id"])
     plan_id = session.client_reference_id
@@ -185,7 +187,7 @@ def pay_success(request):
     subject = "Order Email"
     html_content = get_template("orderemail.html").render({"title": plan.title})
     from_email = "our.hasnain22@gmail.com"
-
+    #some work to do
     msg = EmailMessage(subject, html_content, from_email, ["john@gmail.com"])
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
@@ -272,10 +274,12 @@ def trainerlogin(request):
         if trainer > 0:
             trainer = models.Trainer.objects.filter(username=username, pwd=pwd).first()
             request.session["trainerLogin"] = True
-            request.session["trainerid"] = trainer.id
+            request.session["name"] = trainer.full_name # type: ignore
+            request.session["trainerid"] = trainer.id # type: ignore
+            messages.success(request, "Login Success!")
             return redirect("/trainer_dashboard")
         else:
-            msg = "Invalid!!"
+            messages.error(request, "Invalid cardentials")
     form = forms.TrainerLoginForm
     return render(request, "trainer/login.html", {"form": form, "msg": msg})
 
@@ -366,7 +370,7 @@ def get_notifs(request):
         if not notifStatus:
             totalUnread = totalUnread + 1
         jsonData.append(
-            {"pk": d.id, "notify_detail": d.notify_detail, "notifStatus": notifStatus}
+            {"pk": d.id, "notify_detail": d.notify_detail, "notifStatus": notifStatus} # type: ignore
         )
     # jsonData=serializers.serialize('json', data)
     return JsonResponse({"data": jsonData, "totalUnread": totalUnread})
@@ -399,7 +403,7 @@ def trainer_notifs(request):
         if not notifStatus:
             totalUnread = totalUnread + 1
         jsonData.append(
-            {"pk": d.id, "notify_detail": d.notif_msg, "notifStatus": notifStatus}
+            {"pk": d.id, "notify_detail": d.notif_msg, "notifStatus": notifStatus} # type: ignore
         )
     return render(
         request, "trainer/notifs.html", {"notifs": jsonData, "totalUnread": totalUnread}

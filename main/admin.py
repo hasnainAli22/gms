@@ -105,3 +105,7 @@ admin.site.register(models.EquipmentInventory, EquipmentInventoryAdmin)
 class AppSettingAdmin(admin.ModelAdmin):
 	list_display=('image_tag',)
 admin.site.register(models.AppSetting,AppSettingAdmin)
+
+class UserProfileAdmin(admin.ModelAdmin):
+	list_display=('user','phone_number')
+admin.site.register(models.UserProfile, UserProfileAdmin)

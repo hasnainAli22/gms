@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from . import models
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+import re
 
 
 class EnquiryForm(forms.ModelForm):
@@ -17,25 +18,39 @@ class EnquiryForm(forms.ModelForm):
             "detail":forms.Textarea(attrs={"class":"form-control","rows":"2"}),
         }
 
-
 class SignUp(UserCreationForm):
+    first_name = forms.CharField(
+        label=_("First Name"),
+        max_length=30,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    last_name = forms.CharField(
+        label=_("Last Name"),
+        max_length=30,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    phone_number = forms.CharField(
+        label=_("Phone Number"),
+        max_length=15,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
     password1 = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"class":"form-control"}),
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
     password2 = forms.CharField(
         label=_("Password Confirmation"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"class":"form-control"}),
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'first_name', 'last_name', 'phone_number', 'password1', 'password2']
         widgets = {
-            "username": forms.TextInput(attrs={"class":"form-control"}),
-            "email": forms.EmailInput(attrs={"class":"form-control"}),
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
         }
         help_texts = {
             "username": None,
@@ -58,6 +73,13 @@ class SignUp(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email address is already in use.")
         return email
+    
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        # Basic phone number validation using regex
+        if not re.match(r'^\+?1?\d{11,13}$', phone_number):
+            raise forms.ValidationError("Enter a valid phone number.")
+        return phone_number
 
     def clean(self):
         cleaned_data = super().clean()
@@ -69,6 +91,17 @@ class SignUp(UserCreationForm):
 
         return cleaned_data
 
+    def save(self, commit=True):
+        user = super(SignUp, self).save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user.save()
+            phone_number = self.cleaned_data['phone_number']
+            user.userprofile.phone_number = phone_number
+            user.userprofile.save()
+        return user
+
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     password = forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
@@ -76,23 +109,47 @@ class CustomLoginForm(AuthenticationForm):
             'username': forms.TextInput(attrs={'class': 'form-control'})
         }
 
-class ProfileForm(UserChangeForm):
-    class Meta:
-        model=User
-        fields=('first_name','last_name','email','username')
-        widgets = {
-            "first_name": forms.TextInput(attrs={"class":"form-control"}),
-            "last_name": forms.TextInput(attrs={"class":"form-control"}),
-            "email": forms.EmailInput(attrs={"class":"form-control"}),
-            "username": forms.TextInput(attrs={"class":"form-control"}),
 
+class ProfileForm(UserChangeForm):
+    phone_number = forms.CharField(
+        label="Phone Number",
+        max_length=15,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username', 'phone_number')
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "username": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        if self.instance and hasattr(self.instance, 'userprofile'):
+            self.fields['phone_number'].initial = self.instance.userprofile.phone_number
 
+    def save(self, commit=True):
+        user = super(ProfileForm, self).save(commit=False)
+        if commit:
+            user.save()
+            if hasattr(user, 'userprofile'):
+                user.userprofile.phone_number = self.cleaned_data['phone_number']
+                user.userprofile.save()
+        return user
+     
 class TrainerLoginForm(forms.ModelForm):
-	class Meta:
-		model=models.Trainer
-		fields=('username','pwd')
+     class Meta:
+          model=models.Trainer
+          fields=('username','pwd')
+          widgets = {
+               'pwd': forms.PasswordInput(attrs={'class': 'form-control'}),
+               'username': forms.TextInput(attrs={'class': 'form-control'}),
+          }
+
 
 class TrainerProfileForm(forms.ModelForm):
     class Meta:
