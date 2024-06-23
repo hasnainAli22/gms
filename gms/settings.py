@@ -132,26 +132,97 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 JAZZMIN_SETTINGS = {
-    "site_title": "GMS Admin",
-    "site_brand": "GMS",
-    "site_header": "GMS Admin",
+    "site_title": "Mughal Gym Admin",
+    "site_brand": "Mughal Gym",
+    "site_header": "Mughal Gym Admin",
     "order_with_respect_to": [
         "auth",
-        "main.banners",
-        "main.service",
-        "main.enquiry",
-        "main.gallery",
-        "main.GalleryImage",
-        "main.Page",
-        "main.Faq",
-        "main.SubPlan",
-        "main.SubPlanFeature",
-        "main.PlanDiscount",
+        "main",  # Assuming "main" is your main app
     ],
+    "custom_links": {
+        "main": [
+            {
+                "name": "Content Management",
+                "models": [
+                    "main.banners",
+                    "main.service",
+                    "main.gallery",
+                    "main.GalleryImage",
+                    "main.Page",
+                    "main.Faq",
+                ],
+            },
+            {
+                "name": "Subscription Plans",
+                "models": [
+                    "main.SubPlan",
+                    "main.SubPlanFeature",
+                    # Remove "main.PlanDiscount" from here
+                ],
+            },
+            {
+                "name": "User Management",
+                "models": [
+                    "main.Subscriber",
+                    "main.Trainer",
+                    "main.UserProfile",
+                ],
+            },
+            {
+                "name": "Notifications",
+                "models": [
+                    "main.Notify",
+                    "main.NotifUserStatus",
+                    "main.TrainerNotification",
+                    "main.NotifTrainerStatus",
+                ],
+            },
+            {
+                "name": "Other",
+                "models": [
+                    "main.Enquiry",
+                    "main.AssignSubscriber",
+                    "main.TrainerAchivement",
+                    "main.TrainerSalary",
+                    "main.TrainerMsg",
+                    "main.TrainerSubscriberReport",
+                    "main.AppSetting",
+                    "main.EquipmentInventory",
+                ],
+            },
+        ],
+    },
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "main.banners": "fas fa-flag",
+        "main.service": "fas fa-concierge-bell",
+        "main.gallery": "fas fa-image",
+        "main.GalleryImage": "fas fa-images",
+        "main.Page": "fas fa-file-alt",
+        "main.Faq": "fas fa-question",
+        "main.SubPlan": "fas fa-certificate",
+        "main.SubPlanFeature": "fas fa-list",
+        # Remove icon for "main.PlanDiscount" if present
+        "main.Subscriber": "fas fa-user",
+        "main.Trainer": "fas fa-user-tie",
+        "main.UserProfile": "fas fa-user-cog",
+        "main.Notify": "fas fa-bell",
+        "main.NotifUserStatus": "fas fa-bell",
+        "main.TrainerNotification": "fas fa-bell",
+        "main.NotifTrainerStatus": "fas fa-bell",
+        "main.Enquiry": "fas fa-question-circle",
+        "main.AssignSubscriber": "fas fa-user-plus",
+        "main.TrainerAchivement": "fas fa-trophy",
+        "main.TrainerSalary": "fas fa-money-check-alt",
+        "main.TrainerMsg": "fas fa-comment-alt",
+        "main.TrainerSubscriberReport": "fas fa-file-alt",
+        "main.AppSetting": "fas fa-cogs",
+        "main.EquipmentInventory": "fas fa-tools",
+    },
+    # Hide "main.PlanDiscount" model from appearing in the sidebar
+    "hide_models": ["main.PlanDiscount"],
 }
-
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 
@@ -167,6 +238,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
 
 from django.contrib.messages import constants as messages
 

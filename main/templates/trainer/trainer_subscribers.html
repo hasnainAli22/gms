@@ -1,58 +1,118 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-    <!-- Main Start -->
-    <main>
-		<!-- Services -->
-		<section class="container my-4">
-			<div class="row">
-				<div class="col-3">
-					{% include 'trainer/left-sidebar.html' %}
-				</div>
-				<div class="col-9">
-					<h3 class="mb-4 border-bottom pb-1">Subscriber List</h3>
-					<div class="list-group">
-					{% for ts in trainer_subs %}	
-						<button  data-bs-toggle="modal" data-bs-target="#userdetail-{{ts.id}}" class="list-group-item">{{ts.user}}</button>
-						{% comment %} Model {% endcomment %}
-						<div class="modal fade" id="userdetail-{{ts.id}}" tabindex="-1"
-									aria-labelledby="exampleModalLabel-{ts.id}" aria-hidden="true">
-									<div class="modal-dialog modal-lg">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title" id="exampleModalLabel-{ts.id}">
-													 Achivements</h5>
-												<button type="button" class="btn-close" data-bs-dismiss="modal"
-													aria-label="Close"></button>
-											</div>
-											<div class="modal-body">
-												<table class="table table-hover">
-													<thead>
-														<tr>
-															<th>Title</th>
-															<th>Image</th>
-															<th>Detail</th>
-														</tr>
-													</thead>
-													<tbody>
-														{% comment %} {% for achive in my_trainer.trainer.trainerachivement_set.all %}
-														<tr>
-															<td>{{achive.title}}</td>
-															<td><img src="{{achive.img.url}}" width="80" /></td>
-															<td>{{achive.detail}}</td>
-														</tr>
-														{% endfor %} {% endcomment %}
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-					{% endfor %}
-					</div>
-				</div>
-			</div>
-		</section>
-		<!-- End -->
-    </main>
-    <!-- End -->
+<!-- Main Start -->
+<main>
+    <!-- Services -->
+    <section class="container my-4">
+        <div class="row">
+            <!-- Left Sidebar -->
+            <div class="col-md-3">
+                {% include 'trainer/left-sidebar.html' %}
+            </div>
+            <!-- Subscriber List -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">Subscriber List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone Number</th>
+                                        <th scope="col">Subscription Plan</th>
+                                        <th scope="col">Joined</th>
+                                        <th scope="col">Active</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in subscriber_data %}
+                                    <tr>
+                                        <td>{{ data.assign_subscriber.user.username }}</td>
+                                        <td>{{ data.assign_subscriber.user.email }}</td>
+                                        <td>
+                                            {% if data.user_profile.phone_number %}
+                                            {{ data.user_profile.phone_number }}
+                                            {% else %}
+                                            N/A
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ data.subscription.plan.title }}</td>
+                                        <td>{{ data.assign_subscriber.created_at | date }}</td>
+                                        <td>{% if data.subscription.is_active %} Yes {% else %} No {% endif %}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#subscriberDetailModal-{{ data.assign_subscriber.id }}">
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Modal for User Details -->
+                                    <div class="modal fade" id="subscriberDetailModal-{{ data.assign_subscriber.id }}"
+                                        tabindex="-1"
+                                        aria-labelledby="subscriberDetailModalLabel-{{ data.assign_subscriber.id }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="subscriberDetailModalLabel-{{ data.assign_subscriber.id }}">
+                                                        Subscriber Details - {{ data.assign_subscriber.user.username }}</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p><strong>Email:</strong> {{ data.assign_subscriber.user.email }}</p>
+                                                            <p><strong>Phone Number:</strong>
+                                                                {% if data.user_profile.phone_number %}
+                                                                {{ data.user_profile.phone_number }}
+                                                                {% else %}
+                                                                N/A
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            {% if data.subscription %}
+                                                            <h6>Subscription Details</h6>
+                                                            <p><strong>Plan:</strong> {{ data.subscription.plan.title }}</p>
+                                                            <p><strong>Price:</strong> {{ data.subscription.price }}</p>
+                                                            <p><strong>Registration Date:</strong> {{ data.subscription.reg_date }}</p>
+                                                            <p><strong>End Date:</strong> {{ data.subscription.end_date }}</p>
+                                                            {% else %}
+                                                            <p><strong>No active subscription.</strong></p>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Modal -->
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Subscriber List -->
+        </div>
+    </section>
+    <!-- End Services -->
+</main>
+<!-- End Main -->
 {% endblock %}

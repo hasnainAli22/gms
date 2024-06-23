@@ -284,7 +284,10 @@ def trainerlogout(request):
 
 # Trainer Dashboard
 def trainer_dashboard(request):
-    return render(request, "trainer/dashboard.html")
+    t_id = request.session['trainerid']
+    trainer = models.Trainer.objects.get(pk=t_id)
+    
+    return render(request, "trainer/dashboard.html", {"trainer":trainer})
 
 
 # Trainer Profile
@@ -301,17 +304,28 @@ def trainer_profile(request):
     return render(request, "trainer/profile.html", {"form": form, "msg": msg})
 
 
-# Trainer Subscribers
 def trainer_subscribers(request):
-    trainer = models.Trainer.objects.get(pk=request.session["trainerid"])
-    trainer_subs = models.AssignSubscriber.objects.filter(trainer=trainer).order_by(
-        "-id"
-    )
+    trainer = get_object_or_404(models.Trainer, pk=request.session["trainerid"])
+    trainer_subs = models.AssignSubscriber.objects.filter(trainer=trainer).order_by("-id")
+    
+    subscriber_data = []
+    for ts in trainer_subs:
+        # Fetch user profile details (phone number)
+        user_profile = models.UserProfile.objects.get(user=ts.user)
+        
+        # Fetch latest active subscription
+        subscription = models.Subscription.objects.filter(user=ts.user, is_active=True).order_by("-reg_date").first()
+        
+        # Prepare data for the subscriber
+        subscriber_data.append({
+            'assign_subscriber': ts,
+            'user_profile': user_profile,
+            'subscription': subscription
+        })
+
     return render(
-        request, "trainer/trainer_subscribers.html", {"trainer_subs": trainer_subs}
+        request, "trainer/trainer_subscribers.html", {"subscriber_data": subscriber_data}
     )
-
-
 # Trainer Payments
 def trainer_payments(request):
     trainer = models.Trainer.objects.get(pk=request.session["trainerid"])
@@ -435,7 +449,9 @@ def trainer_msgs(request):
 
 # Report for user
 def report_for_user(request):
-    trainer = models.Trainer.objects.get(id=request.session["trainerid"])
+    trainer = get_object_or_404(models.Trainer, id=request.session.get("trainerid"))
+    trainer_subs = models.AssignSubscriber.objects.filter(trainer=trainer)
+
     msg = ""
     if request.method == "POST":
         form = forms.ReportForUserForm(request.POST)
@@ -446,8 +462,10 @@ def report_for_user(request):
             msg = "Data has been saved"
         else:
             msg = "Invalid Response!!"
-    form = forms.ReportForUserForm
-    return render(request, "report_for_user.html", {"form": form, "msg": msg})
+    else:
+        form = forms.ReportForUserForm()
+
+    return render(request, "report_for_user.html", {"form": form, "msg": msg, "trainer_subs": trainer_subs})
 
 
 # Report for trainer

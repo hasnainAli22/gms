@@ -146,32 +146,38 @@ def create_subscriber(sender, instance, created, **kwrargs):
 
 # Subscription
 class Subscription(models.Model):
-	user=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-	plan=models.ForeignKey(SubPlan, on_delete=models.CASCADE,null=True)
-	price=models.CharField(max_length=50)
-	reg_date=models.DateField(auto_now_add=True,null=True)
-	end_date = models.DateField(null=True, blank=True)
-	is_active = models.BooleanField(default=True)
-	
-	def save(self, *args, **kwargs):
-		# if not self.end_date:
-		# 	self.end_date = self.reg_date + timedelta(days=self.plan.validity_days)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    plan = models.ForeignKey('SubPlan', on_delete=models.CASCADE, null=True)
+    price = models.CharField(max_length=50)  # Consider using DecimalField for monetary values
+    reg_date = models.DateField(auto_now_add=True, null=True)
+    # end_date should be automatically calculated based on reg_date and plan validity
+    # end_date = models.DateField(null=True, blank=True)  # Remove this field
+    is_active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
         # Deactivate other active subscriptions for the user
-		if self.is_active:
-			Subscription.objects.filter(user=self.user, is_active=True).update(is_active=False)
-		super().save(*args, **kwargs)
+        if self.is_active:
+            Subscription.objects.filter(user=self.user, is_active=True).exclude(pk=self.pk).update(is_active=False)
+        super().save(*args, **kwargs)
 
-	@property
-	def end_date(self):
-		return self.reg_date + timedelta(days=self.plan.validity_days)
+    @property
+    def end_date(self):
+        # Calculate end_date based on reg_date and plan validity_days
+        if self.reg_date and self.plan:
+            return self.reg_date + timedelta(days=self.plan.validity_days)
+        return None
 
-	@property
-	def is_expired(self):
-		return timezone.now().date() > self.end_date
-	
-	def __str__(self):
-		return f"{self.user.username} - {self.plan.title}"
- 
+    @property
+    def is_expired(self):
+        # Check if subscription is expired based on current date and end_date
+        return timezone.now().date() > self.end_date if self.end_date else False
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plan.title}"
+
+    class Meta:
+        verbose_name = "Subscription"
+        verbose_name_plural = "Subscriptions"
 # Trainer
 class Trainer(models.Model):
 	full_name=models.CharField(max_length=100)
@@ -344,4 +350,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+
 

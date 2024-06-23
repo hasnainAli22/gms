@@ -91,15 +91,18 @@
                         <a class="dropdown-item" href="{% url 'trainerlogout' %}">Logout</a>
                       </li>
                     {% else %}
-                      <li>
-                        <a class="dropdown-item" href="{% url 'trainerlogin' %}">Trainer Login</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="{% url 'signup' %}">Register</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="{% url 'login' %}">Login</a>
-                      </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'signup' %}">Register</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'trainerlogin' %}">Trainer Login</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'admin:index' %}.">Admin Login</a>
+                    </li>
                     {% endif %}
                   {% else %}
                     <li>
